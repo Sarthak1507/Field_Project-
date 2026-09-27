@@ -5,11 +5,11 @@ from app.db import execute, row, rows
 from app.security import admin_required, csrf_protect
 from app.validation import date_value, enum_value, positive_id, text
 
-bp = Blueprint("attendance", __name__, url_prefix="/api/attendance")
+attendance_bp = Blueprint("attendance", __name__, url_prefix="/api/attendance")
 STATUSES = ("PRESENT", "ABSENT", "HALF DAY", "LEAVE")
 
 
-@bp.get("")
+@attendance_bp.get("")
 @admin_required
 def list_attendance():
     return jsonify(rows("""SELECT attendance_id AS id, employee_id AS employeeId,
@@ -31,7 +31,7 @@ def attendance_values(data):
     return employee_id, date, status, check_in or None, check_out or None, remarks
 
 
-@bp.post("")
+@attendance_bp.post("")
 @admin_required
 @csrf_protect
 def create_attendance():
@@ -46,7 +46,7 @@ def request_user_id():
     return session["user_id"]
 
 
-@bp.put("/<int:attendance_id>")
+@attendance_bp.put("/<int:attendance_id>")
 @admin_required
 @csrf_protect
 def update_attendance(attendance_id):
@@ -56,7 +56,7 @@ def update_attendance(attendance_id):
     return jsonify(message="Attendance record updated.")
 
 
-@bp.delete("/<int:attendance_id>")
+@attendance_bp.delete("/<int:attendance_id>")
 @admin_required
 @csrf_protect
 def delete_attendance(attendance_id):

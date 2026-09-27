@@ -3,10 +3,10 @@ from flask import Blueprint, jsonify
 from app.db import rows, row
 from app.security import admin_required
 
-bp = Blueprint("reports", __name__, url_prefix="/api/reports")
+reports_bp = Blueprint("reports", __name__, url_prefix="/api/reports")
 
 
-@bp.get("")
+@reports_bp.get("")
 @admin_required
 def report_summary():
     departments = rows("""SELECT d.department_id AS id,d.department_name AS name,

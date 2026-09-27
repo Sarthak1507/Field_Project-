@@ -5,10 +5,10 @@ from app.db import execute, rows
 from app.security import admin_required, csrf_protect
 from app.validation import amount, enum_value, positive_id, text
 
-bp = Blueprint("salary", __name__, url_prefix="/api/salaries")
+salary_bp = Blueprint("salary", __name__, url_prefix="/api/salaries")
 
 
-@bp.get("")
+@salary_bp.get("")
 @admin_required
 def list_salaries():
     return jsonify(rows("""SELECT salary_id AS id,employee_id AS employeeId,
@@ -18,7 +18,7 @@ def list_salaries():
       processed_by AS processedBy FROM salary_records ORDER BY salary_month DESC"""))
 
 
-@bp.post("")
+@salary_bp.post("")
 @admin_required
 @csrf_protect
 def create_salary():
@@ -39,7 +39,7 @@ def create_salary():
     return jsonify(id=salary_id, message="Salary record created."), 201
 
 
-@bp.put("/<int:salary_id>/payment")
+@salary_bp.put("/<int:salary_id>/payment")
 @admin_required
 @csrf_protect
 def update_payment(salary_id):
@@ -52,7 +52,7 @@ def update_payment(salary_id):
     return jsonify(message="Payment status updated.")
 
 
-@bp.delete("/<int:salary_id>")
+@salary_bp.delete("/<int:salary_id>")
 @admin_required
 @csrf_protect
 def delete_salary(salary_id):

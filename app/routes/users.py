@@ -7,17 +7,17 @@ from app.db import execute, row, rows
 from app.security import admin_required, csrf_protect
 from app.validation import enum_value, positive_id, text
 
-bp = Blueprint("users", __name__, url_prefix="/api/users")
+users_bp = Blueprint("users", __name__, url_prefix="/api/users")
 
 
-@bp.get("")
+@users_bp.get("")
 @admin_required
 def list_users():
     return jsonify(rows("""SELECT user_id AS id,username,employee_id AS employeeId,role,status,
       last_login AS lastLogin FROM users ORDER BY username"""))
 
 
-@bp.post("")
+@users_bp.post("")
 @admin_required
 @csrf_protect
 def create_user():
@@ -36,7 +36,7 @@ def create_user():
     return jsonify(id=user_id, message="User created."), 201
 
 
-@bp.put("/<int:user_id>")
+@users_bp.put("/<int:user_id>")
 @admin_required
 @csrf_protect
 def update_user(user_id):
@@ -58,7 +58,7 @@ def update_user(user_id):
     return jsonify(message="User updated.")
 
 
-@bp.delete("/<int:user_id>")
+@users_bp.delete("/<int:user_id>")
 @admin_required
 @csrf_protect
 def delete_user(user_id):

@@ -4,10 +4,10 @@ from app.db import execute, row, rows
 from app.security import admin_required, csrf_protect
 from app.validation import enum_value, text
 
-bp = Blueprint("departments", __name__, url_prefix="/api/departments")
+departments_bp = Blueprint("departments", __name__, url_prefix="/api/departments")
 
 
-@bp.get("")
+@departments_bp.get("")
 @admin_required
 def list_departments():
     return jsonify(rows("""SELECT d.department_id AS id, d.department_name AS name,
@@ -16,7 +16,7 @@ def list_departments():
         GROUP BY d.department_id ORDER BY d.department_name"""))
 
 
-@bp.post("")
+@departments_bp.post("")
 @admin_required
 @csrf_protect
 def create_department():
@@ -27,7 +27,7 @@ def create_department():
     return jsonify(id=department_id, message="Department created."), 201
 
 
-@bp.put("/<int:department_id>")
+@departments_bp.put("/<int:department_id>")
 @admin_required
 @csrf_protect
 def update_department(department_id):
@@ -39,7 +39,7 @@ def update_department(department_id):
     return jsonify(message="Department updated.")
 
 
-@bp.delete("/<int:department_id>")
+@departments_bp.delete("/<int:department_id>")
 @admin_required
 @csrf_protect
 def delete_department(department_id):

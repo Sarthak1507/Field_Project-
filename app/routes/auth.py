@@ -7,15 +7,15 @@ from werkzeug.security import check_password_hash
 from app.db import row, execute
 from app.security import csrf_protect, csrf_token, login_required
 
-bp = Blueprint("auth", __name__, url_prefix="/api")
+auth_bp = Blueprint("auth", __name__, url_prefix="/api")
 
 
-@bp.get("/csrf")
+@auth_bp.get("/csrf")
 def get_csrf():
     return jsonify(csrf_token=csrf_token())
 
 
-@bp.post("/login")
+@auth_bp.post("/login")
 @csrf_protect
 def login():
     data = request.get_json(silent=True) or {}
@@ -38,7 +38,7 @@ def login():
                          "role": user["role"]}, csrf_token=csrf_token())
 
 
-@bp.post("/logout")
+@auth_bp.post("/logout")
 @csrf_protect
 @login_required
 def logout():
@@ -46,7 +46,7 @@ def logout():
     return jsonify(message="Signed out.")
 
 
-@bp.get("/session")
+@auth_bp.get("/session")
 @login_required
 def current_session():
     return jsonify(user={"id": session["user_id"], "username": session["username"],

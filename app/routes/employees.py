@@ -7,7 +7,7 @@ from app.security import admin_required, csrf_protect
 from app.validation import (amount, date_value, email_value, enum_value,
                             phone_value, positive_id, text)
 
-bp = Blueprint("employees", __name__, url_prefix="/api/employees")
+employees_bp = Blueprint("employees", __name__, url_prefix="/api/employees")
 STATUSES = ("Active", "On leave", "Inactive")
 GENDERS = ("Female", "Male", "Non-binary", "Prefer not to say")
 
@@ -37,7 +37,7 @@ def employee_values(data):
     )
 
 
-@bp.get("")
+@employees_bp.get("")
 @admin_required
 def list_employees():
     return jsonify(rows("""SELECT employee_id AS id,employee_code AS code,first_name AS first,
@@ -48,7 +48,7 @@ def list_employees():
       profile_photo AS profilePhoto FROM employees ORDER BY first_name,last_name"""))
 
 
-@bp.post("")
+@employees_bp.post("")
 @admin_required
 @csrf_protect
 def create_employee():
@@ -60,7 +60,7 @@ def create_employee():
     return jsonify(id=employee_id, message="Employee created."), 201
 
 
-@bp.put("/<int:employee_id>")
+@employees_bp.put("/<int:employee_id>")
 @admin_required
 @csrf_protect
 def update_employee(employee_id):
@@ -74,7 +74,7 @@ def update_employee(employee_id):
     return jsonify(message="Employee updated.")
 
 
-@bp.delete("/<int:employee_id>")
+@employees_bp.delete("/<int:employee_id>")
 @admin_required
 @csrf_protect
 def delete_employee(employee_id):

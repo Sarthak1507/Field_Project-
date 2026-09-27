@@ -4,10 +4,10 @@ from flask import Blueprint, jsonify
 from app.db import rows
 from app.security import admin_required
 
-bp = Blueprint("dashboard", __name__, url_prefix="/api")
+dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api")
 
 
-@bp.get("/bootstrap")
+@dashboard_bp.get("/bootstrap")
 @admin_required
 def bootstrap():
     departments = rows("SELECT department_id AS id, department_name AS name, description, status FROM departments ORDER BY department_name")

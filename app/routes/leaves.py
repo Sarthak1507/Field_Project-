@@ -5,10 +5,10 @@ from app.db import execute, rows
 from app.security import admin_required, csrf_protect
 from app.validation import enum_value, text
 
-bp = Blueprint("leaves", __name__, url_prefix="/api/leaves")
+leaves_bp = Blueprint("leaves", __name__, url_prefix="/api/leaves")
 
 
-@bp.get("")
+@leaves_bp.get("")
 @admin_required
 def list_leaves():
     return jsonify(rows("""SELECT leave_id AS id, employee_id AS employeeId, leave_type AS type,
@@ -16,7 +16,7 @@ def list_leaves():
       reviewed_by AS reviewerId,review_remarks AS remarks FROM leave_requests ORDER BY applied_at DESC"""))
 
 
-@bp.post("")
+@leaves_bp.post("")
 @admin_required
 @csrf_protect
 def create_leave():
@@ -35,7 +35,7 @@ def create_leave():
     return jsonify(id=leave_id, message="Leave request submitted."), 201
 
 
-@bp.put("/<int:leave_id>/review")
+@leaves_bp.put("/<int:leave_id>/review")
 @admin_required
 @csrf_protect
 def review_leave(leave_id):
@@ -47,7 +47,7 @@ def review_leave(leave_id):
     return jsonify(message=f"Leave request {status.lower()}.")
 
 
-@bp.delete("/<int:leave_id>")
+@leaves_bp.delete("/<int:leave_id>")
 @admin_required
 @csrf_protect
 def delete_leave(leave_id):
