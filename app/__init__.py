@@ -34,8 +34,15 @@ def create_app(test_config=None):
 
     @app.errorhandler(MySQLError)
     def database_unavailable(error):
-        app.logger.error("MySQL operation failed: %s", error.__class__.__name__)
-        return jsonify(error="The database is unavailable or could not complete the request."), 503
+        code = getattr(error, "errno", None)
+        app.logger.error("MySQL operation failed with error code %s", code or "unknown")
+        if code == 1045:
+            message = "MySQL rejected the configured DB_USER or DB_PASSWORD. Check that oems_app exists on this MySQL server and that its password matches .env."
+        elif code == 1044:
+            message = f"The configured MySQL account does not have access to {app.config['DB_NAME']}. Grant it access to that database."
+        else:
+            message = "The database is unavailable or could not complete the request."
+        return jsonify(error=message), 503
 
     # Keep the hand-built Phase 1 pages and assets intact while serving them
     # from the same origin as the JSON API.

@@ -118,6 +118,37 @@ CREATE TABLE IF NOT EXISTS salary_records (
   CONSTRAINT chk_salary_month_start CHECK(DAY(salary_month) = 1)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_attendance_date ON attendance(attendance_date);
-CREATE INDEX idx_leave_status ON leave_requests(status);
-CREATE INDEX idx_salary_month ON salary_records(salary_month);
+-- MySQL does not support CREATE INDEX IF NOT EXISTS. Check the current
+-- database so this schema can be safely re-applied after a partial run.
+SET @has_attendance_date_index = (
+  SELECT COUNT(*) FROM information_schema.statistics
+  WHERE table_schema = DATABASE() AND table_name = 'attendance'
+    AND index_name = 'idx_attendance_date'
+);
+SET @index_sql = IF(@has_attendance_date_index = 0,
+  'CREATE INDEX idx_attendance_date ON attendance(attendance_date)', 'SELECT 1');
+PREPARE index_stmt FROM @index_sql;
+EXECUTE index_stmt;
+DEALLOCATE PREPARE index_stmt;
+
+SET @has_leave_status_index = (
+  SELECT COUNT(*) FROM information_schema.statistics
+  WHERE table_schema = DATABASE() AND table_name = 'leave_requests'
+    AND index_name = 'idx_leave_status'
+);
+SET @index_sql = IF(@has_leave_status_index = 0,
+  'CREATE INDEX idx_leave_status ON leave_requests(status)', 'SELECT 1');
+PREPARE index_stmt FROM @index_sql;
+EXECUTE index_stmt;
+DEALLOCATE PREPARE index_stmt;
+
+SET @has_salary_month_index = (
+  SELECT COUNT(*) FROM information_schema.statistics
+  WHERE table_schema = DATABASE() AND table_name = 'salary_records'
+    AND index_name = 'idx_salary_month'
+);
+SET @index_sql = IF(@has_salary_month_index = 0,
+  'CREATE INDEX idx_salary_month ON salary_records(salary_month)', 'SELECT 1');
+PREPARE index_stmt FROM @index_sql;
+EXECUTE index_stmt;
+DEALLOCATE PREPARE index_stmt;

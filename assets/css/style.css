@@ -66,7 +66,7 @@ textarea:focus-visible {
   min-height: 100vh;
   background:
     linear-gradient(0deg, #12392ec9, #12392e28),
-    url("background.webp") center/cover;
+    url("../images/background.webp") center/cover;
   display: flex;
   align-items: flex-end;
   padding: 7vw;

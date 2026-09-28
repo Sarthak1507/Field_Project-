@@ -26,10 +26,12 @@ Edit `.env`: set a long random `SECRET_KEY`, your MySQL connection values, and a
 Create a restricted MySQL application account (run in a MySQL client as an administrator):
 
 ```sql
-CREATE USER 'oems_app'@'localhost' IDENTIFIED BY 'use-a-unique-database-password';
-GRANT ALL PRIVILEGES ON orphanage_employee_management.* TO 'oems_app'@'localhost';
-FLUSH PRIVILEGES;
+CREATE USER IF NOT EXISTS 'oems_app'@'localhost' IDENTIFIED BY 'use-a-unique-database-password';
+ALTER USER 'oems_app'@'localhost' IDENTIFIED BY 'use-a-unique-database-password';
+GRANT SELECT, INSERT, UPDATE, DELETE ON orphanage_employee_management.* TO 'oems_app'@'localhost';
 ```
+
+Set `DB_USER=oems_app` and `DB_PASSWORD` to the same password in `.env`. If the account already exists, the `ALTER USER` statement resets its password so it matches the application settings.
 
 Apply the schema from PowerShell:
 

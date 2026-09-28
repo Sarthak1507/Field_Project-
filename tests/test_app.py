@@ -27,7 +27,7 @@ class AppTests(unittest.TestCase):
     def test_frontend_pages_and_user_assets_are_served(self):
         for path in ("/", "/frontend/dashboard.html", "/frontend/reports.html",
                      "/assets/css/style.css", "/assets/js/app.js",
-                     "/assets/images/maher-logo.jpg", "/assets/images/orphanage-community.webp"):
+                     "/assets/images/LogoMaher.jpg", "/assets/images/background.webp"):
             with self.subTest(path=path):
                 response = self.client.get(path)
                 if path == "/":
