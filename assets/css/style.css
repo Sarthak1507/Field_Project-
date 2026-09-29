@@ -388,15 +388,14 @@ textarea:focus-visible {
 
 .btn.small {
   margin-top: 27px;
-  padding: 5px 7px;
+  padding: 7px 10px;
   font-size: 12px;
 }
 
 .btn.ghost {
-  position: absolute;
   background: transparent;
   color: var(--primary);
-  padding: 8px 12px;
+  padding: 5px 8px;
 }
 
 /* Cards and dashboard stats */
